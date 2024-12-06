@@ -1,0 +1,10 @@
+<?php
+class NewsController extends controllers {
+
+public function detail($id) {
+        $newsModel = $this->models('News');
+        $data['news'] = $newsModel->getById($id);
+        $this->views('news/detail', $data);
+    }
+}
+?>

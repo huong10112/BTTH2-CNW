@@ -1,10 +1,44 @@
 <?php
-class NewsController extends controllers {
+require_once 'models/News.php';
+require_once 'models/Category.php';
 
-public function detail($id) {
-        $newsModel = $this->models('News');
-        $data['news'] = $newsModel->getById($id);
-        $this->views('news/detail', $data);
+class NewsController {
+    public function index() {
+        $news = new News();
+        $newsList = $news->getAllNews();
+        include 'views/admin/news/index.php';
+    }
+
+    public function add() {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $news = new News();
+            $news->addNews($_POST['title'], $_POST['content'], $_POST['image'], $_POST['category_id']);
+            header('Location: /index.php?controller=news&action=index');
+        } else {
+            $category = new Category();
+            $categories = $category->getAllCategories();
+            include 'views/admin/news/add.php';
+        }
+    }
+
+    public function edit($id) {
+        $news = new News();
+        $newsDetail = $news->getNewsById($id);
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $news->updateNews($id, $_POST['title'], $_POST['content'], $_POST['image'], $_POST['category_id']);
+            header('Location: /index.php?controller=news&action=index');
+        }
+
+        $category = new Category();
+        $categories = $category->getAllCategories();
+        include 'views/admin/news/edit.php';
+    }
+
+    public function delete($id) {
+        $news = new News();
+        $news->deleteNews($id);
+        header('Location: /index.php?controller=news&action=index');
     }
 }
 ?>

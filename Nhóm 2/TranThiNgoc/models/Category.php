@@ -1,17 +1,14 @@
 <?php
-require_once 'config.php';
+// models/Category.php
+require_once 'Database.php';
 
 class Category {
     public function getAllCategories() {
-        global $conn;
-        $sql = "SELECT * from categories";
-        $result = $conn->query($sql);
+        $conn = Database::connect();
+        $sql = "SELECT * FROM categories";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
 
-        $categories = [];
-        while ($row = $result->fetch_assoc()) {
-            $categories[] = $row;
-        }
-        return $categories;
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 }
-?>

@@ -2,11 +2,10 @@
 require_once 'config.php';
 
 class News {
-// models/News.php
 public function getAllNews() {
     global $conn;
-    $sql = "SELECT news.id, news.title, categories.name AS category_name, news.created_at
-            FROM news 
+    $sql = "SELECT news.id, news.title, news.content, categories.name AS category_name, news.created_at
+            FROM news
             JOIN categories ON news.category_id = categories.id";
     $result = $conn->query($sql);
 
@@ -16,7 +15,6 @@ public function getAllNews() {
     }
     return $newsList;
 }
-
 
     public function addNews($title, $content, $image, $category_id) {
         global $conn;
@@ -35,7 +33,7 @@ public function getAllNews() {
         return $stmt->get_result()->fetch_assoc();
     }
 
-    public function updateNews($id, $title, $content, $image, $category_id) {
+    public function updateNews( $id, $title, $content, $image, $category_id ) {
         global $conn;
         $sql = "UPDATE news SET title = ?, content = ?, image = ?, category_id = ? WHERE id = ?";
         $stmt = $conn->prepare($sql);

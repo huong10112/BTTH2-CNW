@@ -1,23 +1,26 @@
-<h1>SỬa tin tức</h1>
-<form method="POST">
-    <label>Tiêu đề :</label><br>
-    <input type="text" name="title" value="<?= $newsDetail['title'] ?>" required><br><br>
-
-    <label>Nội dung :</label><br>
-    <textarea name="content" required><?= $newsDetail['content'] ?></textarea><br><br>
-
-    <label> Ảnh :</label><br>
-    <input type="text" name="image" value="<?= $newsDetail['image'] ?>"><br><br>
-
-    <label>Category:</label><br>
-    <select name="category_id" required>
-        <?php foreach ($categories as $category): ?>
-            <option value="<?= htmlspecialchars($category['id']) ?>" 
-                <?= $category['id'] == $newsDetail['category_id'] ? 'selected' : '' ?>>
-                <?= htmlspecialchars($category['name']) ?>
-            </option>
-        <?php endforeach; ?>
-    </select><br><br>
-
-    <button type="submit"> Lưu </button>
+<!-- views/admin/news/edit.php -->
+<h2>Sửa Tin Tức</h2>
+<form method="POST" action="">
+    <div>
+        <label for="title">Tiêu đề:</label>
+        <input type="text" id="title" name="title" value="<?= htmlspecialchars($news['title']) ?>" required>
+    </div>
+    <div>
+        <label for="content">Nội dung:</label>
+        <textarea id="content" name="content" required><?= htmlspecialchars($news['content']) ?></textarea>
+    </div>
+    <div>
+        <label for="category_id">Danh mục:</label>
+        <select id="category_id" name="category_id" required>
+            <?php foreach ($categories as $category): ?>
+                <option value="<?= $category['id'] ?>" <?= $category['id'] == $news['category_id'] ? 'selected' : '' ?>>
+                    <?= htmlspecialchars($category['name']) ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+    </div>
+    <div>
+        <button type="submit">Lưu</button>
+        <a href="index.php?controller=news&action=index">Hủy</a>
+    </div>
 </form>

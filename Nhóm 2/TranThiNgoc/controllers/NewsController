@@ -1,44 +1,56 @@
 <?php
+// controllers/NewsController.php
 require_once 'models/News.php';
 require_once 'models/Category.php';
 
 class NewsController {
     public function index() {
-        $news = new News();
-        $newsList = $news->getAllNews();
-        include 'views/admin/news/index.php';
+        $newsModel = new News();
+        $newsList = $newsModel->getAllNews();
+        require 'views/admin/news/index.php';
     }
 
     public function add() {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $news = new News();
-            $news->addNews($_POST['title'], $_POST['content'], $_POST['image'], $_POST['category_id']);
-            header('Location: /index.php?controller=news&action=index');
-        } else {
-            $category = new Category();
-            $categories = $category->getAllCategories();
-            include 'views/admin/news/add.php';
-        }
-    }
-
-    public function edit($id) {
-        $news = new News();
-        $newsDetail = $news->getNewsById($id);
+        $categoryModel = new Category();
+        $categories = $categoryModel->getAllCategories();
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $news->updateNews($id, $_POST['title'], $_POST['content'], $_POST['image'], $_POST['category_id']);
-            header('Location: /index.php?controller=news&action=index');
+            $title = $_POST['title'];
+            $content = $_POST['content'];
+            $category_id = $_POST['category_id'];
+
+            $newsModel = new News();
+            $newsModel->createNews($title, $content, $category_id);
+            header('Location: index.php?controller=news&action=index');
         }
 
-        $category = new Category();
-        $categories = $category->getAllCategories();
-        include 'views/admin/news/edit.php';
+        require 'views/admin/news/add.php';
     }
 
-    public function delete($id) {
-        $news = new News();
-        $news->deleteNews($id);
-        header('Location: /index.php?controller=news&action=index');
+public function edit() {
+    $id = $_GET['id']; 
+    $newsModel = new News();
+    $news = $newsModel->getNewsById($id); 
+
+    $categoryModel = new Category();
+    $categories = $categoryModel->getAllCategories(); 
+
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $title = $_POST['title'];
+        $content = $_POST['content'];
+        $category_id = $_POST['category_id'];
+
+        $newsModel->updateNews($id, $title, $content, $category_id); 
+        header('Location: index.php?controller=news&action=index'); 
+    }
+
+    require 'views/admin/news/edit.php';
+}
+
+    public function delete() {
+        $id = $_GET['id'];
+        $newsModel = new News();
+        $newsModel->deleteNews($id);
+        header('Location: index.php?controller=news&action=index');
     }
 }
-?>
